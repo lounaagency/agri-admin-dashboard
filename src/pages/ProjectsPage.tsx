@@ -1,6 +1,5 @@
-
-import React, { useState } from "react";
-import { Plus, Pencil, Trash2, Eye, Users } from "lucide-react";
+import React from "react";
+import { Plus } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -11,170 +10,157 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ColumnDef } from "@tanstack/react-table";
+import { Progress } from "@/components/ui/progress";
 
 interface ProjectData {
   id: string;
-  code: string;
-  title: string;
-  culture: string;
-  status: "en_cours" | "en_attente" | "terminé" | "annulé";
+  name: string;
+  description: string;
+  status: "en_cours" | "termine" | "en_attente";
   progress: number;
-  startDate: string;
-  endDate: string;
-  area: number;
-  technician: {
-    id: string;
-    name: string;
-  };
+  createdAt: string;
 }
 
 const ProjectsPage: React.FC = () => {
-  const [projects, setProjects] = useState<ProjectData[]>([
+  const projectsData: ProjectData[] = [
     {
       id: "1",
-      code: "RIZ-2023-56",
-      title: "Riziculture Analamanga",
-      culture: "Riz",
+      name: "Projet Riziculture Améliorée",
+      description: "Amélioration des techniques de riziculture dans la région d'Alaotra-Mangoro.",
       status: "en_cours",
-      progress: 75,
-      startDate: "2023-01-15",
-      endDate: "2023-05-15",
-      area: 5,
-      technician: {
-        id: "1",
-        name: "Rakoto Jean",
-      },
+      progress: 60,
+      createdAt: "2023-01-15",
     },
     {
       id: "2",
-      code: "MAIS-2023-31",
-      title: "Culture de maïs Alaotra",
-      culture: "Maïs",
-      status: "en_cours",
-      progress: 50,
-      startDate: "2023-02-01",
-      endDate: "2023-05-01",
-      area: 3,
-      technician: {
-        id: "5",
-        name: "Rakotobe Michel",
-      },
+      name: "Projet Vanille Durable",
+      description: "Promotion de la culture durable de la vanille dans la région de Sava.",
+      status: "termine",
+      progress: 100,
+      createdAt: "2023-02-20",
     },
     {
       id: "3",
-      code: "MANIOC-2023-08",
-      title: "Plantation de manioc Itasy",
-      culture: "Manioc",
+      name: "Projet Agroforesterie",
+      description: "Mise en place de systèmes agroforestiers pour la conservation des sols.",
       status: "en_attente",
-      progress: 0,
-      startDate: "2023-03-10",
-      endDate: "2023-12-10",
-      area: 2,
-      technician: {
-        id: "7",
-        name: "Rasoamanarivo Claude",
-      },
+      progress: 20,
+      createdAt: "2023-03-05",
     },
     {
       id: "4",
-      code: "HARICOT-2023-12",
-      title: "Culture haricot Antsiranana",
-      culture: "Haricot",
+      name: "Projet Irrigation",
+      description: "Amélioration des systèmes d'irrigation pour augmenter les rendements agricoles.",
       status: "en_cours",
-      progress: 25,
-      startDate: "2023-03-01",
-      endDate: "2023-05-15",
-      area: 1.5,
-      technician: {
-        id: "10",
-        name: "Raharisoa Hélène",
-      },
+      progress: 80,
+      createdAt: "2023-01-10",
     },
     {
       id: "5",
-      code: "RIZ-2023-42",
-      title: "Riziculture Fianarantsoa",
-      culture: "Riz",
-      status: "terminé",
+      name: "Projet Formation Agricole",
+      description: "Formation des agriculteurs aux nouvelles technologies agricoles.",
+      status: "termine",
       progress: 100,
-      startDate: "2023-01-01",
-      endDate: "2023-04-30",
-      area: 4,
-      technician: {
-        id: "1",
-        name: "Rakoto Jean",
-      },
+      createdAt: "2023-04-12",
     },
     {
       id: "6",
-      code: "TOMATE-2023-17",
-      title: "Culture de tomates Toamasina",
-      culture: "Tomate",
+      name: "Projet Elevage Caprin",
+      description: "Développement de l'élevage caprin pour améliorer les revenus des familles.",
       status: "en_cours",
-      progress: 85,
-      startDate: "2023-02-15",
-      endDate: "2023-05-25",
-      area: 0.8,
-      technician: {
-        id: "5",
-        name: "Rakotobe Michel",
-      },
+      progress: 40,
+      createdAt: "2023-03-28",
     },
     {
       id: "7",
-      code: "ARACHIDE-2023-05",
-      title: "Plantation d'arachides Mahajanga",
-      culture: "Arachide",
-      status: "annulé",
-      progress: 30,
-      startDate: "2023-02-01",
-      endDate: "2023-06-10",
-      area: 2.5,
-      technician: {
-        id: "10",
-        name: "Raharisoa Hélène",
-      },
+      name: "Projet Apiculture",
+      description: "Promotion de l'apiculture pour la production de miel et la pollinisation.",
+      status: "en_attente",
+      progress: 10,
+      createdAt: "2023-05-05",
     },
     {
       id: "8",
-      code: "OIGNON-2023-09",
-      title: "Culture d'oignons Antananarivo",
-      culture: "Oignon",
+      name: "Projet Maraîchage",
+      description: "Développement du maraîchage pour assurer la sécurité alimentaire.",
       status: "en_cours",
-      progress: 40,
-      startDate: "2023-03-15",
-      endDate: "2023-08-15",
-      area: 1.2,
-      technician: {
-        id: "7",
-        name: "Rasoamanarivo Claude",
-      },
+      progress: 70,
+      createdAt: "2023-02-15",
     },
-  ]);
+    {
+      id: "9",
+      name: "Projet Pisciculture",
+      description: "Introduction de la pisciculture pour diversifier les sources de protéines.",
+      status: "en_attente",
+      progress: 30,
+      createdAt: "2023-04-30",
+    },
+    {
+      id: "10",
+      name: "Projet Transformation Agricole",
+      description: "Mise en place d'unités de transformation des produits agricoles.",
+      status: "en_cours",
+      progress: 50,
+      createdAt: "2023-05-20",
+    },
+  ];
+
+  const getStatusConfig = (status: string) => {
+    switch (status) {
+      case "en_cours":
+        return {
+          label: "En cours",
+          class: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+        };
+      case "termine":
+        return {
+          label: "Terminé",
+          class: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+        };
+      case "en_attente":
+        return {
+          label: "En attente",
+          class: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
+        };
+      default:
+        return {
+          label: "Inconnu",
+          class: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+        };
+    }
+  };
+
+  const getProgressIndicatorClass = (progress: number) => {
+    if (progress < 30) {
+      return "bg-red-500";
+    } else if (progress < 70) {
+      return "bg-amber-500";
+    } else {
+      return "bg-green-500";
+    }
+  };
 
   const projectColumns: ColumnDef<ProjectData>[] = [
     {
-      accessorKey: "code",
-      header: "Référence",
-      cell: ({ row }) => {
-        return (
-          <div className="font-medium">{row.getValue("code")}</div>
-        );
-      },
-    },
-    {
-      accessorKey: "title",
-      header: "Projet",
+      accessorKey: "name",
+      header: "Nom du projet",
       cell: ({ row }) => {
         const project = row.original;
         return (
-          <div>
-            <p className="font-medium">{project.title}</p>
-            <p className="text-xs text-muted-foreground">Culture: {project.culture}</p>
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarImage src={`https://avatar.vercel.sh/${project.id}`} alt={project.name} />
+              <AvatarFallback>
+                {project.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-medium">{project.name}</p>
+              <p className="text-xs text-muted-foreground">{project.description}</p>
+            </div>
           </div>
         );
       },
@@ -184,28 +170,7 @@ const ProjectsPage: React.FC = () => {
       header: "Statut",
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
-        
-        const statusConfig = {
-          en_cours: {
-            label: "En cours",
-            class: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-          },
-          en_attente: {
-            label: "En attente",
-            class: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
-          },
-          terminé: {
-            label: "Terminé",
-            class: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-          },
-          annulé: {
-            label: "Annulé",
-            class: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-          },
-        };
-        
-        const config = statusConfig[status as keyof typeof statusConfig];
-        
+        const config = getStatusConfig(status);
         return (
           <Badge variant="outline" className={cn("font-medium", config.class)}>
             {config.label}
@@ -217,49 +182,32 @@ const ProjectsPage: React.FC = () => {
       accessorKey: "progress",
       header: "Progression",
       cell: ({ row }) => {
-        const progress = row.getValue("progress") as number;
+        const data = row.original;
         return (
-          <div className="flex w-full max-w-[150px] flex-col gap-1">
-            <div className="flex justify-between text-xs">
-              <span>Progression</span>
-              <span>{progress}%</span>
-            </div>
-            <Progress
-              value={progress}
-              className="h-2"
-              indicatorClassName={cn({
-                "bg-red-500": progress < 30,
-                "bg-amber-500": progress >= 30 && progress < 70,
-                "bg-green-500": progress >= 70,
-              })}
+          <div className="space-y-2">
+            <p className="text-sm font-medium">{data.progress}%</p>
+            <Progress 
+              value={data.progress}
+              className={`h-2 ${getProgressIndicatorClass(data.progress)}`}
             />
           </div>
         );
       },
     },
     {
-      accessorKey: "technician",
-      header: "Technicien",
+      accessorKey: "createdAt",
+      header: "Date de création",
       cell: ({ row }) => {
-        const technician = row.getValue("technician") as { id: string; name: string };
+        const date = new Date(row.getValue("createdAt") as string);
         return (
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={`https://avatar.vercel.sh/${technician.id}`} alt={technician.name} />
-              <AvatarFallback>
-                {technician.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
-            <span>{technician.name}</span>
-          </div>
+          <span>
+            {date.toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+          </span>
         );
-      },
-    },
-    {
-      accessorKey: "area",
-      header: "Surface (ha)",
-      cell: ({ row }) => {
-        return <span>{row.getValue("area")} ha</span>;
       },
     },
     {
@@ -293,30 +241,40 @@ const ProjectsPage: React.FC = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   className="flex items-center"
-                  onClick={() => console.log("Voir détails", project.id)}
-                >
-                  <Eye className="mr-2 h-4 w-4" />
-                  Voir détails
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex items-center"
                   onClick={() => console.log("Éditer", project.id)}
                 >
-                  <Pencil className="mr-2 h-4 w-4" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="mr-2 h-4 w-4"
+                  >
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                  </svg>
                   Éditer
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex items-center"
-                  onClick={() => console.log("Assigner", project.id)}
-                >
-                  <Users className="mr-2 h-4 w-4" />
-                  Assigner
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="flex items-center text-red-600 focus:text-red-600"
                   onClick={() => console.log("Supprimer", project.id)}
                 >
-                  <Trash2 className="mr-2 h-4 w-4" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="mr-2 h-4 w-4"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V6" />
+                    <path d="M8 6V4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2" />
+                  </svg>
                   Supprimer
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -330,8 +288,8 @@ const ProjectsPage: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="Gestion des projets agricoles" 
-        description="Gérez les projets agricoles et leur progression"
+        title="Gestion des projets" 
+        description="Gérez les projets de la plateforme"
         action={{
           label: "Ajouter un projet",
           icon: <Plus className="h-4 w-4" />,
@@ -341,8 +299,8 @@ const ProjectsPage: React.FC = () => {
       
       <DataTable 
         columns={projectColumns} 
-        data={projects}
-        searchKey="title"
+        data={projectsData}
+        searchKey="name"
         searchPlaceholder="Rechercher un projet..."
       />
     </div>

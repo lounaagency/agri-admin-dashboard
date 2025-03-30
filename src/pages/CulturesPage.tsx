@@ -1,228 +1,160 @@
-
-import React, { useState } from "react";
-import { Plus, Pencil, Trash2, CalendarRange, Clock } from "lucide-react";
+import React from "react";
+import { Plus } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface CultureData {
   id: string;
   name: string;
-  duration: number;
-  season: "pluie" | "sèche" | "toute-année";
-  milestones: number;
-  profitability: "faible" | "moyenne" | "élevée";
-  icon: string;
-}
-
-interface MilestoneData {
-  id: string;
-  name: string;
-  culture: string;
-  durationDays: number;
-  order: number;
+  type: "riz" | "mais" | "manioc" | "haricot";
+  surface: number;
+  location: string;
+  progress: number;
+  startDate: string;
+  endDate: string;
 }
 
 const CulturesPage: React.FC = () => {
-  const [cultures, setCultures] = useState<CultureData[]>([
+  const cultures: CultureData[] = [
     {
       id: "1",
-      name: "Riz",
-      duration: 120,
-      season: "pluie",
-      milestones: 6,
-      profitability: "élevée",
-      icon: "🌾",
+      name: "Champ de riz Anosy",
+      type: "riz",
+      surface: 5,
+      location: "Anosy",
+      progress: 75,
+      startDate: "2023-06-01",
+      endDate: "2023-12-01",
     },
     {
       id: "2",
-      name: "Maïs",
-      duration: 90,
-      season: "toute-année",
-      milestones: 5,
-      profitability: "moyenne",
-      icon: "🌽",
+      name: "Plantation de maïs Itasy",
+      type: "mais",
+      surface: 3,
+      location: "Itasy",
+      progress: 30,
+      startDate: "2023-07-15",
+      endDate: "2024-01-15",
     },
     {
       id: "3",
-      name: "Manioc",
-      duration: 270,
-      season: "toute-année",
-      milestones: 4,
-      profitability: "moyenne",
-      icon: "🥔",
+      name: "Culture de manioc Amoron'i Mania",
+      type: "manioc",
+      surface: 8,
+      location: "Amoron'i Mania",
+      progress: 90,
+      startDate: "2023-05-10",
+      endDate: "2023-11-10",
     },
     {
       id: "4",
-      name: "Haricot",
-      duration: 75,
-      season: "sèche",
-      milestones: 4,
-      profitability: "moyenne",
-      icon: "🌱",
+      name: "Champs de haricots Atsimo-Andrefana",
+      type: "haricot",
+      surface: 4,
+      location: "Atsimo-Andrefana",
+      progress: 50,
+      startDate: "2023-08-01",
+      endDate: "2024-02-01",
     },
     {
       id: "5",
-      name: "Tomate",
-      duration: 100,
-      season: "toute-année",
-      milestones: 5,
-      profitability: "élevée",
-      icon: "🍅",
+      name: "Riziculture Haute Matsiatra",
+      type: "riz",
+      surface: 6,
+      location: "Haute Matsiatra",
+      progress: 20,
+      startDate: "2023-09-01",
+      endDate: "2024-03-01",
     },
     {
       id: "6",
-      name: "Oignon",
-      duration: 150,
-      season: "sèche",
-      milestones: 4,
-      profitability: "élevée",
-      icon: "🧅",
+      name: "Maïsiculture Analanjirofo",
+      type: "mais",
+      surface: 2,
+      location: "Analanjirofo",
+      progress: 60,
+      startDate: "2023-06-20",
+      endDate: "2023-12-20",
     },
     {
       id: "7",
-      name: "Patate douce",
-      duration: 120,
-      season: "toute-année",
-      milestones: 3,
-      profitability: "faible",
-      icon: "🍠",
+      name: "Manioc près de Menabe",
+      type: "manioc",
+      surface: 7,
+      location: "Menabe",
+      progress: 80,
+      startDate: "2023-07-01",
+      endDate: "2024-01-01",
     },
     {
       id: "8",
-      name: "Arachide",
-      duration: 130,
-      season: "pluie",
-      milestones: 4,
-      profitability: "moyenne",
-      icon: "🥜",
-    },
-  ]);
-
-  const [milestones, setMilestones] = useState<MilestoneData[]>([
-    {
-      id: "1",
-      name: "Préparation du sol",
-      culture: "Riz",
-      durationDays: 15,
-      order: 1,
+      name: "Haricot dans le Vakinankaratra",
+      type: "haricot",
+      surface: 3,
+      location: "Vakinankaratra",
+      progress: 40,
+      startDate: "2023-08-15",
+      endDate: "2024-02-15",
     },
     {
-      id: "2",
-      name: "Semis",
-      culture: "Riz",
-      durationDays: 10,
-      order: 2,
+      id: "9",
+      name: "Rizières de Betsiboka",
+      type: "riz",
+      surface: 5,
+      location: "Betsiboka",
+      progress: 100,
+      startDate: "2023-05-25",
+      endDate: "2023-11-25",
     },
     {
-      id: "3",
-      name: "Premier sarclage",
-      culture: "Riz",
-      durationDays: 20,
-      order: 3,
+      id: "10",
+      name: "Champs de maïs Sofia",
+      type: "mais",
+      surface: 4,
+      location: "Sofia",
+      progress: 10,
+      startDate: "2023-09-10",
+      endDate: "2024-03-10",
     },
-    {
-      id: "4",
-      name: "Deuxième sarclage",
-      culture: "Riz",
-      durationDays: 20,
-      order: 4,
-    },
-    {
-      id: "5",
-      name: "Épiaison",
-      culture: "Riz",
-      durationDays: 30,
-      order: 5,
-    },
-    {
-      id: "6",
-      name: "Récolte",
-      culture: "Riz",
-      durationDays: 25,
-      order: 6,
-    },
-    {
-      id: "7",
-      name: "Préparation du sol",
-      culture: "Maïs",
-      durationDays: 12,
-      order: 1,
-    },
-    {
-      id: "8",
-      name: "Semis",
-      culture: "Maïs",
-      durationDays: 8,
-      order: 2,
-    },
-  ]);
+  ];
 
   const cultureColumns: ColumnDef<CultureData>[] = [
     {
       accessorKey: "name",
-      header: "Culture",
-      cell: ({ row }) => {
-        const culture = row.original;
-        return (
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent">
-              <span className="text-lg">{culture.icon}</span>
-            </div>
-            <div>
-              <p className="font-medium">{culture.name}</p>
-            </div>
-          </div>
-        );
-      },
+      header: "Nom de la culture",
     },
     {
-      accessorKey: "duration",
-      header: "Durée (jours)",
+      accessorKey: "type",
+      header: "Type",
       cell: ({ row }) => {
-        const duration = row.getValue("duration") as number;
-        return (
-          <div className="flex items-center">
-            <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-            <span>{duration} jours</span>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "season",
-      header: "Saison",
-      cell: ({ row }) => {
-        const season = row.getValue("season") as string;
-        
-        const seasonConfig = {
-          pluie: {
-            label: "Saison des pluies",
-            class: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+        const type = row.getValue("type") as string;
+
+        const typeConfig = {
+          riz: {
+            label: "Riz",
+            class: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
           },
-          sèche: {
-            label: "Saison sèche",
-            class: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
-          },
-          "toute-année": {
-            label: "Toute l'année",
+          mais: {
+            label: "Maïs",
             class: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
           },
+          manioc: {
+            label: "Manioc",
+            class: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
+          },
+          haricot: {
+            label: "Haricot",
+            class: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+          },
         };
-        
-        const config = seasonConfig[season as keyof typeof seasonConfig];
-        
+
+        const config = typeConfig[type as keyof typeof typeConfig];
+
         return (
           <Badge variant="outline" className={cn("font-medium", config.class)}>
             {config.label}
@@ -231,109 +163,69 @@ const CulturesPage: React.FC = () => {
       },
     },
     {
-      accessorKey: "milestones",
-      header: "Jalons",
-      cell: ({ row }) => {
-        return <span>{row.getValue("milestones")} étapes</span>;
-      },
+      accessorKey: "surface",
+      header: "Surface (ha)",
     },
     {
-      accessorKey: "profitability",
-      header: "Rentabilité",
+      accessorKey: "location",
+      header: "Localisation",
+    },
+    {
+      accessorKey: "progress",
+      header: "Progression",
       cell: ({ row }) => {
-        const profitability = row.getValue("profitability") as string;
-        
-        const profitConfig = {
-          faible: {
-            label: "Faible",
-            class: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-            progress: 33,
-          },
-          moyenne: {
-            label: "Moyenne",
-            class: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
-            progress: 66,
-          },
-          élevée: {
-            label: "Élevée",
-            class: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-            progress: 100,
-          },
+        const data = row.original;
+
+        const getProgressIndicatorClass = (progress: number) => {
+          if (progress < 25) {
+            return "bg-red-500";
+          } else if (progress < 75) {
+            return "bg-amber-500";
+          } else {
+            return "bg-green-500";
+          }
         };
-        
-        const config = profitConfig[profitability as keyof typeof profitConfig];
-        
+
         return (
-          <div className="flex w-full max-w-[150px] flex-col gap-1">
-            <Badge variant="outline" className={cn("font-medium", config.class)}>
-              {config.label}
-            </Badge>
-            <Progress
-              value={config.progress}
-              className="h-2"
-              indicatorClassName={cn({
-                "bg-red-500": config.progress <= 33,
-                "bg-amber-500": config.progress > 33 && config.progress <= 66,
-                "bg-green-500": config.progress > 66,
-              })}
+          <div className="space-y-2">
+            <p className="text-sm font-medium">{data.progress}%</p>
+            <Progress 
+              value={data.progress}
+              className={`h-2 ${getProgressIndicatorClass(data.progress)}`}
             />
           </div>
         );
       },
     },
     {
-      id: "actions",
-      header: "Actions",
+      accessorKey: "startDate",
+      header: "Date de début",
       cell: ({ row }) => {
-        const culture = row.original;
-        
+        const date = new Date(row.getValue("startDate") as string);
         return (
-          <div className="flex items-center justify-end">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <span className="sr-only">Menu</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <circle cx="12" cy="12" r="1" />
-                    <circle cx="12" cy="5" r="1" />
-                    <circle cx="12" cy="19" r="1" />
-                  </svg>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="flex items-center"
-                  onClick={() => console.log("Voir jalons", culture.id)}
-                >
-                  <CalendarRange className="mr-2 h-4 w-4" />
-                  Voir jalons
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex items-center"
-                  onClick={() => console.log("Éditer", culture.id)}
-                >
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Éditer
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex items-center text-red-600 focus:text-red-600"
-                  onClick={() => console.log("Supprimer", culture.id)}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Supprimer
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <span>
+            {date.toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "endDate",
+      header: "Date de fin",
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("endDate") as string);
+        return (
+          <span>
+            {date.toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+          </span>
         );
       },
     },
@@ -341,22 +233,17 @@ const CulturesPage: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <PageHeader 
-        title="Gestion des cultures" 
-        description="Gérez les types de cultures et leurs jalons"
+      <PageHeader
+        title="Gestion des cultures"
+        description="Suivez l'état de vos différentes cultures"
         action={{
           label: "Ajouter une culture",
           icon: <Plus className="h-4 w-4" />,
           onClick: () => console.log("Ajouter une culture"),
         }}
       />
-      
-      <DataTable 
-        columns={cultureColumns} 
-        data={cultures}
-        searchKey="name"
-        searchPlaceholder="Rechercher une culture..."
-      />
+
+      <DataTable columns={cultureColumns} data={cultures} searchKey="name" searchPlaceholder="Rechercher une culture..." />
     </div>
   );
 };
