@@ -14,6 +14,7 @@ interface StatsCardProps {
     isPositive: boolean;
   };
   className?: string;
+  onClick?: () => void;
 }
 
 const StatsCard: React.FC<StatsCardProps> = ({
@@ -23,9 +24,14 @@ const StatsCard: React.FC<StatsCardProps> = ({
   icon: Icon,
   trend,
   className,
+  onClick,
 }) => {
   return (
-    <Card className={cn("", className)}>
+    <Card 
+      className={cn("", onClick && "transition-all hover:shadow-md", className)}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+    >
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
