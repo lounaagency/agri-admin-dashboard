@@ -28,9 +28,10 @@ const StatsCard: React.FC<StatsCardProps> = ({
 }) => {
   return (
     <Card 
-      className={cn("", onClick && "transition-all hover:shadow-md", className)}
+      className={cn("", onClick && "transition-all hover:shadow-md cursor-pointer", className)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">

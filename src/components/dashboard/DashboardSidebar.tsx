@@ -87,6 +87,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ open }) => {
                                    : "hover:bg-muted",
                           !open && "justify-center px-0"
                         )}
+                        onClick={() => console.log(`Clicked ${item.title}, path: ${item.path}`)}
                       >
                         <item.icon className={cn("h-5 w-5", open ? "mr-2" : "mr-0")} />
                         {open && <span>{item.title}</span>}
